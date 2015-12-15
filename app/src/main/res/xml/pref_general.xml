@@ -1,0 +1,21 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+        android:defaultValue="15"
+        android:inputType="numberSigned"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:key="general_sleep"
+        android:title="@string/fall_asleep" />
+
+    <EditTextPreference
+        android:defaultValue="90"
+        android:inputType="numberSigned"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:key="general_cycle"
+        android:title="@string/cycle_duration" />
+
+</PreferenceScreen>

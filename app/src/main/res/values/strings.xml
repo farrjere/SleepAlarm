@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Sleep Alarm</string>
+    <string name="action_settings">Settings</string>
+    <string name="sleepButton">Go To Sleep</string>
+    <string name="wakeLabel">Wake up by:</string>
+    <string name="cancel">Cancel</string>
+    <string name="dismiss">Dismiss Alarm</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="general">General</string>
+
+    <string name="fall_asleep">Fall Asleep Time</string>
+    <string name="cycle_duration">Sleep Cycle Length</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="notifications">Notifications</string>
+
+    <string name="ringtone">Ringtone</string>
+
+    <string name="vibrate">Vibrate</string>
+</resources>

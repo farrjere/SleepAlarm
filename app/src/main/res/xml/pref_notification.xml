@@ -1,0 +1,16 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Allows the user to choose a ringtone in the 'notification' category. -->
+    <!-- NOTE: RingtonePreference's summary should be set to its value by the activity code. -->
+    <RingtonePreference
+        android:defaultValue="content://settings/system/notification_sound"
+        android:key="notifications_new_message_ringtone"
+        android:ringtoneType="notification"
+        android:title="@string/ringtone" />
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="notifications_new_message_vibrate"
+        android:title="@string/vibrate" />
+
+</PreferenceScreen>
