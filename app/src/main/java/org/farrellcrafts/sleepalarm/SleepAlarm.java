@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -19,8 +20,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class SleepAlarm extends AppCompatActivity {
     private long milliInCycle = 1000 * 60 * 90L;
@@ -28,7 +31,7 @@ public class SleepAlarm extends AppCompatActivity {
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
     private static SleepAlarm inst;
-    private Ringtone ringtone;
+    private MediaPlayer player;
     private boolean vibrate;
     public static SleepAlarm instance(){
         return inst;
@@ -56,7 +59,8 @@ public class SleepAlarm extends AppCompatActivity {
 
         String strRingtonePreference = sharedPref.getString("notifications_new_message_ringtone", alarmUri.toString());
         Uri uri = Uri.parse(strRingtonePreference);
-        ringtone = RingtoneManager.getRingtone(this, uri);
+
+        player = MediaPlayer.create(this, uri);
     }
 
     @Override
@@ -109,6 +113,8 @@ public class SleepAlarm extends AppCompatActivity {
         pendingIntent = PendingIntent.getBroadcast(
                 this.getApplicationContext(), 0, intent, 0);
         alarmManager.set(AlarmManager.RTC_WAKEUP, wakeTime, pendingIntent);
+        Toast toast = Toast.makeText(this, "Alarm set for "+selected.getTime().toString(), Toast.LENGTH_LONG);
+        toast.show();
         Log.d("sleepAlarm.setAlarm", "Setting alarm");
     }
 
@@ -129,16 +135,30 @@ public class SleepAlarm extends AppCompatActivity {
         Calendar selected = Calendar.getInstance();
         selected.set(Calendar.MINUTE, picker.getCurrentMinute());
         selected.set(Calendar.HOUR_OF_DAY, picker.getCurrentHour());
+
         return selected;
     }
 
     private long getWakeTime(Calendar selected) {
         Calendar now = Calendar.getInstance();
+        setDayOfSelected(selected, now);
         long selTime = selected.getTimeInMillis();
         long curTime = now.getTimeInMillis();
         long diff = Math.abs(selTime - curTime);
         long cycles = diff/ milliInCycle;
         return curTime + cycles * milliInCycle + milliToSleep;
+    }
+
+    private void setDayOfSelected(Calendar selected, Calendar now) {
+        if(now.get(Calendar.HOUR_OF_DAY) > selected.get(Calendar.HOUR_OF_DAY)){
+            GregorianCalendar cal = new GregorianCalendar();
+            int daysInYear = 365;
+            if(cal.isLeapYear(now.get(Calendar.YEAR))){
+                daysInYear = 366;
+            }
+            int dayOfYear = (now.get(Calendar.DAY_OF_YEAR) + 1) % daysInYear;
+            selected.set(Calendar.DAY_OF_YEAR, dayOfYear);
+        }
     }
 
     public void handleAlarm(){
@@ -149,13 +169,15 @@ public class SleepAlarm extends AppCompatActivity {
                 vib.vibrate(2000);
             }
         }
+
         Button cancel = (Button)findViewById(R.id.dismiss);
         cancel.setVisibility(View.VISIBLE);
-        ringtone.play();
+        player.start();
     }
 
     public void dismiss(View view){
-        ringtone.stop();
+        player.stop();
+        player.reset();
         Button cancel = (Button)findViewById(R.id.dismiss);
         cancel.setVisibility(View.INVISIBLE);
     }
